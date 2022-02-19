@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">keyboardanimation</string>
+    <string name="content_editor_hint">輸入訊息</string>
+</resources>
