@@ -1,18 +1,18 @@
 package com.timmy.codelab.keyboardanimation.widget.keyboard
 
-import android.view.View
+import android.widget.EditText
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 internal class KeyboardAnimationCompatImpl10(
-    private val root: View,
+    private val editText: EditText,
     private val keyboardInsetsBottomUpdated: (keyboardInsetsBottom: Int) -> Unit
 ) {
 
     private var keyboardInsetsBottom = 0
 
     fun setupKeyboardAnimations() {
-        ViewCompat.setOnApplyWindowInsetsListener(root) { _, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(editText) { _, windowInsets ->
             val systemBarOrImeInsets = windowInsets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime()
             )

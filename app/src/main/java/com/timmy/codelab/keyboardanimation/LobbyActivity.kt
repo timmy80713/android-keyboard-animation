@@ -12,7 +12,7 @@ import com.timmy.codelab.keyboardanimation.widget.keyboard.KeyboardAnimationComp
 class LobbyActivity : ViewBindingActivity<ActivityLobbyBinding>() {
 
     private val keyboardAnimationHelper by lazy<KeyboardAnimationCompat> {
-        KeyboardAnimationCompatImpl(viewBinding.root, ::keyboardInsetsBottomUpdated)
+        KeyboardAnimationCompatImpl(viewBinding.editorEditText, ::keyboardInsetsBottomUpdated)
     }
 
     override fun createViewBinding(inflater: LayoutInflater) =

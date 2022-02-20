@@ -1,15 +1,15 @@
 package com.timmy.codelab.keyboardanimation.widget.keyboard
 
 import android.os.Build
-import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsAnimation
+import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 internal class KeyboardAnimationCompatImpl11(
-    private val root: View,
+    private val editText: EditText,
     private val keyboardInsetsBottomUpdated: (keyboardInsetsBottom: Int) -> Unit
 ) {
 
@@ -18,7 +18,7 @@ internal class KeyboardAnimationCompatImpl11(
 
     @RequiresApi(Build.VERSION_CODES.R)
     fun setupKeyboardAnimations() {
-        ViewCompat.setOnApplyWindowInsetsListener(root) { _, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(editText) { _, windowInsets ->
 
             val systemInsetsType = WindowInsetsCompat.Type.systemBars()
             val systemInsets = windowInsets.getInsets(systemInsetsType)
@@ -26,7 +26,7 @@ internal class KeyboardAnimationCompatImpl11(
             val imeInsetsType = WindowInsetsCompat.Type.ime()
             val imeInsets = windowInsets.getInsets(imeInsetsType)
 
-            val isKeyboardVisible = root.rootWindowInsets.isVisible(imeInsetsType)
+            val isKeyboardVisible = editText.rootWindowInsets.isVisible(imeInsetsType)
             if (isKeyboardVisible && isKeyboardAnimationEnd) {
                 keyboardInsetsBottom = imeInsets.bottom
             } else if (keyboardInsetsBottom == 0) {
@@ -71,6 +71,6 @@ internal class KeyboardAnimationCompatImpl11(
                 return windowInsets
             }
         }
-        root.setWindowInsetsAnimationCallback(callback)
+        editText.setWindowInsetsAnimationCallback(callback)
     }
 }

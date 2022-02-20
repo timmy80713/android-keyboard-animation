@@ -1,18 +1,18 @@
 package com.timmy.codelab.keyboardanimation.widget.keyboard
 
 import android.os.Build
-import android.view.View
+import android.widget.EditText
 
 class KeyboardAnimationCompatImpl(
-    private val root: View,
+    private val editText: EditText,
     private val keyboardInsetsBottomUpdated: (keyboardInsetsBottom: Int) -> Unit
 ) : KeyboardAnimationCompat {
 
     private val keyboardAnimationHelper10 by lazy {
-        KeyboardAnimationCompatImpl10(root, keyboardInsetsBottomUpdated)
+        KeyboardAnimationCompatImpl10(editText, keyboardInsetsBottomUpdated)
     }
     private val keyboardAnimationHelper11 by lazy {
-        KeyboardAnimationCompatImpl11(root, keyboardInsetsBottomUpdated)
+        KeyboardAnimationCompatImpl11(editText, keyboardInsetsBottomUpdated)
     }
 
     override fun setupKeyboardAnimations() {
