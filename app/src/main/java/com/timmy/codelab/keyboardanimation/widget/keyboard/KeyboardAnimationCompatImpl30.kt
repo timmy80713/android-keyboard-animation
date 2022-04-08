@@ -8,32 +8,32 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-internal class KeyboardAnimationCompatImpl11(
-    private val editText: EditText,
-    private val keyboardInsetsBottomUpdated: (keyboardInsetsBottom: Int) -> Unit
-) {
+internal class KeyboardAnimationCompatImpl30 {
 
     private var isKeyboardAnimationEnd = true
     private var keyboardInsetsBottom = 0
 
     @RequiresApi(Build.VERSION_CODES.R)
-    fun setupKeyboardAnimations() {
-        ViewCompat.setOnApplyWindowInsetsListener(editText) { _, windowInsets ->
+    fun setupKeyboardAnimations(
+        editText: EditText,
+        onKeyboardInsetsBottomChanged: (keyboardInsetsBottom: Int) -> Unit
+    ) {
+        ViewCompat.setOnApplyWindowInsetsListener(editText) { _, insets ->
 
-            val systemInsetsType = WindowInsetsCompat.Type.systemBars()
-            val systemInsets = windowInsets.getInsets(systemInsetsType)
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             val imeInsetsType = WindowInsetsCompat.Type.ime()
-            val imeInsets = windowInsets.getInsets(imeInsetsType)
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
 
             val isKeyboardVisible = editText.rootWindowInsets.isVisible(imeInsetsType)
             if (isKeyboardVisible && isKeyboardAnimationEnd) {
                 keyboardInsetsBottom = imeInsets.bottom
             } else if (keyboardInsetsBottom == 0) {
-                keyboardInsetsBottom = systemInsets.bottom
+                keyboardInsetsBottom = systemBarsInsets.bottom
             }
-            keyboardInsetsBottomUpdated.invoke(keyboardInsetsBottom)
-            windowInsets
+            onKeyboardInsetsBottomChanged.invoke(keyboardInsetsBottom)
+
+            insets
         }
 
         val callback = object : WindowInsetsAnimation.Callback(DISPATCH_MODE_STOP) {
@@ -48,27 +48,24 @@ internal class KeyboardAnimationCompatImpl11(
             }
 
             override fun onProgress(
-                windowInsets: WindowInsets,
-                animations: MutableList<WindowInsetsAnimation>
+                insets: WindowInsets,
+                runningAnimations: MutableList<WindowInsetsAnimation>
             ): WindowInsets {
 
-                val systemInsetsType = WindowInsetsCompat.Type.systemBars()
-                val systemInsets = windowInsets.getInsets(systemInsetsType)
+                val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val systemBarsBottom = systemBarsInsets.bottom
 
-                val imeInsetsType = WindowInsetsCompat.Type.ime()
-                val imeInsets = windowInsets.getInsets(imeInsetsType)
-
+                val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
                 val imeBottom = imeInsets.bottom
-                val systemBarBottom = systemInsets.bottom
 
-                keyboardInsetsBottom = if (imeBottom <= systemBarBottom) {
-                    systemBarBottom
+                keyboardInsetsBottom = if (imeBottom <= systemBarsBottom) {
+                    systemBarsBottom
                 } else {
                     imeBottom
                 }
-                keyboardInsetsBottomUpdated.invoke(keyboardInsetsBottom)
+                onKeyboardInsetsBottomChanged.invoke(keyboardInsetsBottom)
 
-                return windowInsets
+                return insets
             }
         }
         editText.setWindowInsetsAnimationCallback(callback)
