@@ -25,6 +25,5 @@ class KeyboardAnimationCompat {
         }
     }
 
-    private val isAtLeastR: Boolean
-        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+    private val isAtLeastR: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
 }

@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 
 internal class KeyboardAnimationCompatImpl30 {
 
-    private var isKeyboardAnimationEnd = true
+    private var isKeyboardAnimationRunning = false
     private var keyboardInsetsBottom = 0
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -26,7 +26,7 @@ internal class KeyboardAnimationCompatImpl30 {
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
 
             val isKeyboardVisible = editText.rootWindowInsets.isVisible(imeInsetsType)
-            if (isKeyboardVisible && isKeyboardAnimationEnd) {
+            if (isKeyboardVisible && isKeyboardAnimationRunning.not()) {
                 keyboardInsetsBottom = imeInsets.bottom
             } else if (keyboardInsetsBottom == 0) {
                 keyboardInsetsBottom = systemBarsInsets.bottom
@@ -39,12 +39,12 @@ internal class KeyboardAnimationCompatImpl30 {
         val callback = object : WindowInsetsAnimation.Callback(DISPATCH_MODE_STOP) {
             override fun onPrepare(animation: WindowInsetsAnimation) {
                 super.onPrepare(animation)
-                isKeyboardAnimationEnd = false
+                isKeyboardAnimationRunning = true
             }
 
             override fun onEnd(animation: WindowInsetsAnimation) {
                 super.onEnd(animation)
-                isKeyboardAnimationEnd = true
+                isKeyboardAnimationRunning = false
             }
 
             override fun onProgress(

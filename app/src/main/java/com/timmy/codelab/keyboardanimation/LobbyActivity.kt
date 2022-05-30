@@ -10,8 +10,6 @@ import com.timmy.codelab.keyboardanimation.widget.keyboard.KeyboardAnimationComp
 
 class LobbyActivity : ViewBindingActivity<ActivityLobbyBinding>() {
 
-    private val keyboardAnimationCompat = KeyboardAnimationCompat()
-
     override fun createViewBinding(inflater: LayoutInflater) =
         ActivityLobbyBinding.inflate(inflater)
 
@@ -22,25 +20,26 @@ class LobbyActivity : ViewBindingActivity<ActivityLobbyBinding>() {
 
     private fun setupWindow() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.root) { _, insets ->
+        setupWindow1()
+    }
 
+    private fun setupWindow1() {
+        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.root) { _, insets ->
             val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             viewBinding.root.updatePadding(
                 left = systemBarsInsets.left,
                 right = systemBarsInsets.right
             )
-
             insets
         }
-        keyboardAnimationCompat.registerKeyboardAnimations(
-            editText = viewBinding.editorEditText,
-            onKeyboardInsetsBottomChanged = ::onKeyboardInsetsBottomChanged
-        )
-    }
 
-    private fun onKeyboardInsetsBottomChanged(keyboardInsetsBottom: Int) {
-        viewBinding.bottomSpace.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            updateMargins(bottom = keyboardInsetsBottom)
-        }
+        KeyboardAnimationCompat().registerKeyboardAnimations(
+            editText = viewBinding.editorEditText,
+            onKeyboardInsetsBottomChanged = {
+                viewBinding.bottomSpace.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    updateMargins(bottom = it)
+                }
+            }
+        )
     }
 }
